@@ -1,0 +1,23 @@
+name: Pathly gate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  flow:
+    if: ${{ vars.PATHLY_FLOW_ID != '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run the checkout Flow and fail if the path breaks
+        uses: pathlyhq/pathly-action@v1
+        with:
+          api_token: ${{ secrets.PATHLY_API_TOKEN }}
+          operation: run-and-wait
+          scenario_id: ${{ vars.PATHLY_FLOW_ID }}
+          timeout_sec: "180"
